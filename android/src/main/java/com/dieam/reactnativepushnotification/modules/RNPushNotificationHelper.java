@@ -170,7 +170,12 @@ public class RNPushNotificationHelper {
         if (pendingIntent == null) {
             return;
         }
-
+                
+        // call canScheduleExactAlarms to confirm the user has allowed alarms to be set. otherwise,
+        // attempting to set an alarm below will crash the app!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !getAlarmManager().canScheduleExactAlarms()) {
+            return;
+        }
         Log.d(LOG_TAG, String.format("Setting a notification with id %s at time %s",
                 bundle.getString("id"), Long.toString(fireDate)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
